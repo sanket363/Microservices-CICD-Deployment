@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build') {
+            steps {
+                // Clone the code from GitHub
+                git 'https://github.com/sanket363/BE-Project-CICD.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                // Build Docker image
+                script {
+                    sh 'docker build -t snaket2628/netflix-clone:latest .'
+                }
+            }
+        }
+        stage('Push Image to DockerHub') {
+            steps {
+                // Push Docker image to DockerHub
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh 'docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD'
+                        sh 'docker push snaket2628/netflix-clone:latest'
+                    }
+                }
+            }
+        }
+    }
+}

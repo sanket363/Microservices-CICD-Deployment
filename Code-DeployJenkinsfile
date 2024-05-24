@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Setting EKS Cluster') {
+            steps {
+                script {
+                    dir('EKS/ConfigurationFiles') {
+                        sh 'aws eks update-kubeconfig --name my-ekscluster'
+                    }
+                }
+            }
+        }
+        stage('Deploying Application') {
+            steps {
+                script {
+                    sh 'kubectl apply -f deployment.yml'
+                    sh 'kubectl apply -f service.yml'
+                }
+            }
+        }
+    }
+}
