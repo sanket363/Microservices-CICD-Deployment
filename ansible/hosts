@@ -1,0 +1,2 @@
+[hosts]
+44.200.6.161 ansible_user=ubuntu ansible_ssh_private_key_file=/home/sanket/Documents/sanket/keys/new-test.pem

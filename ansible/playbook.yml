@@ -1,0 +1,39 @@
+---
+- name: Install Docker and Jenkins on Ubuntu
+  hosts: hosts
+  become: true
+
+  tasks:
+    - name: Update apt package cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+
+    - name: Install Docker.io
+      package:
+        name: docker.io
+        state: present
+
+    - name: Add Jenkins Debian Repository Key
+      apt_key:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io.key
+        state: present
+
+    - name: Add Jenkins Debian Repository
+      apt_repository:
+        repo: deb https://pkg.jenkins.io/debian-stable binary/
+        state: present
+
+    - name: Install OpenJDK Java Development Kit
+      apt:
+        name: openjdk-11-jdk
+        state: present
+
+    - name: Install Jenkins
+      apt:
+        name: jenkins
+        state: present
+

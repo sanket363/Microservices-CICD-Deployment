@@ -83,11 +83,35 @@ resource "aws_instance" "my_instance" {
   subnet_id          = aws_subnet.my_subnet.id
   vpc_security_group_ids = [aws_security_group.my_sg.id] # Correctly reference the security group ID
   key_name           = "new-test" # Specify the key pair name without .pem extension
-
+  tags = {
+    Name = "server${count.index + 1}"
+  }
   # other instance configurations...
 }
 
 # output block allows you to define values to be displayed after apply
 output "instance_ips" {
   value = [for instance in aws_instance.my_instance : instance.public_ip]
+}
+
+
+output "instance_private_ips" {
+  value = [for instance in aws_instance.my_instance : instance.private_ip]
+}
+
+resource "null_resource" "ansible_inventory" {
+  provisioner "local-exec" {
+    command = <<EOT
+      echo 'Generating Ansible inventory file'
+      cat <<EOF > /home/sanket/Documents/sanket/github/LastYear-Project-DevOps/ansible/hosts
+      [server1]
+      ${aws_instance.my_instance[0].public_ip} ansible_user=ubuntu ansible_ssh_private_key_file=/home/sanket/Documents/sanket/keys/new-test.pem
+
+      [server2]
+      ${aws_instance.my_instance[1].public_ip} ansible_user=ubuntu ansible_ssh_private_key_file=/home/sanket/Documents/sanket/keys/new-test.pem
+
+      [all:vars]
+      ansible_ssh_private_key_file=/home/sanket/Documents/sanket/keys/new-test.pem
+    EOT
+  }
 }
