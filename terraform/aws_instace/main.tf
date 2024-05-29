@@ -14,10 +14,19 @@ variable "ami" {
   default     = "ami-04b70fa74e45c3917"
 }
 
+variable "instance_count" {
+  description = "Number of instances to deploy"
+  default     = 2
+}
+
 # resource block defines the AWS resources to be created
 resource "aws_vpc" "my_vpc" {
   cidr_block = "10.0.0.0/16"
   # other VPC configurations...
+}
+
+resource "aws_internet_gateway" "my_igw" {
+  vpc_id = aws_vpc.my_vpc.id
 }
 
 resource "aws_subnet" "my_subnet" {
@@ -68,23 +77,17 @@ resource "aws_security_group" "my_sg" {
 }
 
 resource "aws_instance" "my_instance" {
-  count             = var.instance_count
-  ami               = var.ami
-  instance_type     = var.instance_type
-  subnet_id         = aws_subnet.my_subnet.id
+  count              = var.instance_count
+  ami                = var.ami
+  instance_type      = var.instance_type
+  subnet_id          = aws_subnet.my_subnet.id
   vpc_security_group_ids = [aws_security_group.my_sg.id] # Correctly reference the security group ID
-  key_name          = "new-test"                    # Specify the key pair name without .pem extension
+  key_name           = "new-test" # Specify the key pair name without .pem extension
 
   # other instance configurations...
 }
 
-#number of instances you wanna deploy
-variable "instance_count" {
-  description = "Number of instances to deploy"
-  default     = 2
-}
-
 # output block allows you to define values to be displayed after apply
-output "instance_ip" {
-  value = aws_instance.my_instance.public_ip
+output "instance_ips" {
+  value = [for instance in aws_instance.my_instance : instance.public_ip]
 }
