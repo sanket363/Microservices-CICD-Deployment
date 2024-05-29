@@ -68,6 +68,7 @@ resource "aws_security_group" "my_sg" {
 }
 
 resource "aws_instance" "my_instance" {
+  count             = var.instance_count
   ami               = var.ami
   instance_type     = var.instance_type
   subnet_id         = aws_subnet.my_subnet.id
@@ -75,6 +76,12 @@ resource "aws_instance" "my_instance" {
   key_name          = "new-test"                    # Specify the key pair name without .pem extension
 
   # other instance configurations...
+}
+
+#number of instances you wanna deploy
+variable "instance_count" {
+  description = "Number of instances to deploy"
+  default     = 1
 }
 
 # output block allows you to define values to be displayed after apply
