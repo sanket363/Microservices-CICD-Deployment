@@ -81,7 +81,7 @@ resource "aws_instance" "my_instance" {
 #number of instances you wanna deploy
 variable "instance_count" {
   description = "Number of instances to deploy"
-  default     = 1
+  default     = 2
 }
 
 # output block allows you to define values to be displayed after apply
