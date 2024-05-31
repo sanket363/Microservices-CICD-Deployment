@@ -1,7 +1,8 @@
 # Registry and repository for Docker images
 # Default is docker/robotshop/image:latest
 image:
-  repo: robotshop
+  #repo: robotshop
+  repo: snaket2628
   version: latest
   pullPolicy: IfNotPresent
 
