@@ -19,7 +19,7 @@ spec:
       {{ end }}
       containers:
       - name: ratings
-        image: snaket2628/ratings:latest
+        image: {{ .Values.image.repo }}/rs-ratings:{{ .Values.image.version }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 80

@@ -19,7 +19,7 @@ spec:
       {{ end }}
       containers:
       - name: mysql
-        image: snaket2628/mysql:latest
+        image: {{ .Values.image.repo }}/rs-mysql-db:{{ .Values.image.version }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         # added for Istio
         securityContext:

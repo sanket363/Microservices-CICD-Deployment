@@ -19,7 +19,7 @@ spec:
       {{ end }}
       containers:
       - name: web
-        image: snaket2628/web:latest
+        image: {{ .Values.image.repo }}/rs-web:{{ .Values.image.version }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.eum.key }}
         env:

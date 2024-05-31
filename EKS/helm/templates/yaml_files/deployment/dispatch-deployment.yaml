@@ -19,7 +19,7 @@ spec:
       {{ end }}
       containers:
       - name: dispatch
-        image: snaket2628/dispatch:latest
+        image: {{ .Values.image.repo }}/rs-dispatch:{{ .Values.image.version }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           # agent networking access

@@ -19,7 +19,7 @@ spec:
       {{ end }}
       containers:
       - name: mongodb
-        image: snaket2628/mongo:latest
+        image: {{ .Values.image.repo }}/rs-mongodb:{{ .Values.image.version }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 27017

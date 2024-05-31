@@ -22,7 +22,7 @@ spec:
       {{ end }}
       containers:
       - name: payment
-        image: snaket2628/payment:latest
+        image: {{ .Values.image.repo }}/rs-payment:{{ .Values.image.version }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         # agent networking access
         env:
