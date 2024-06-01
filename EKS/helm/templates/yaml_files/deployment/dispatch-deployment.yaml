@@ -19,7 +19,7 @@ spec:
       {{ end }}
       containers:
       - name: dispatch
-        image: {{ .Values.image.repo }}/rs-dispatch:{{ .Values.image.version }}
+        image: {{ .Values.image.repo }}/rs-dispatch
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         env:
           # agent networking access

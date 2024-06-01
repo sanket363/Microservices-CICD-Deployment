@@ -19,7 +19,7 @@ spec:
       {{ end }}
       containers:
       - name: cart
-        image: {{ .Values.image.repo }}/rs-cart:{{ .Values.image.version }}
+        image: {{ .Values.image.repo }}/rs-cart:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         # agent networking access
         env:

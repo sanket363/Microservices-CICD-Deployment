@@ -3,7 +3,7 @@
 image:
   #repo: robotshop
   repo: snaket2628
-  version: latest
+  #version: latest
   pullPolicy: IfNotPresent
 
 # EUM configuration

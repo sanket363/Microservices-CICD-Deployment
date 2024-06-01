@@ -19,7 +19,7 @@ spec:
       {{ end }}
       containers:
       - name: ratings
-        image: {{ .Values.image.repo }}/rs-ratings:{{ .Values.image.version }}
+        image: {{ .Values.image.repo }}/rs-ratings
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 80
