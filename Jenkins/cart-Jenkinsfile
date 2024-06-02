@@ -1,0 +1,61 @@
+pipeline {
+    agent any
+    
+    environment {
+        REPO_URL = 'https://github.com/sanket363/LastYear-Project-DevOps.git'
+        DOCKERHUB_CREDENTIALS = 'docker-cred' // Replace with your Docker Hub credentials ID
+        IMAGE_NAME = 'rs-cart'
+        IMAGE_TAG = 'latest'
+        DOCKERFILE_PATH = 'cart/Dockerfile' // Path to Dockerfile within the repository
+        DOCKERHUB_USERNAME = 'snaket2628' // Your Docker Hub username
+    }
+    
+    stages {
+        stage('clean workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Clone Repository') {
+            steps {
+                // Clone the Git repository
+                sh "git clone ${env.REPO_URL}"
+            }
+        }
+        
+        stage('Build and Push Docker Image') {
+            steps {
+                // Change directory to cart folder
+                dir('LastYear-Project-DevOps/cart') {
+                    // Build Docker image
+                    script {
+                        docker.build("${env.DOCKERHUB_USERNAME}/${env.IMAGE_NAME}:${env.IMAGE_TAG}")
+                    }
+                }
+                
+                // Push Docker image to Docker Hub
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', env.DOCKERHUB_CREDENTIALS) {
+                        docker.image("${env.DOCKERHUB_USERNAME}/${env.IMAGE_NAME}:${env.IMAGE_TAG}").push()
+                        docker.image("${env.DOCKERHUB_USERNAME}/${env.IMAGE_NAME}:latest").push()
+                    }
+                }
+            }
+        }
+        stage('Trivy Scan') {
+            steps {
+                // Run Trivy image scan using Trivy Docker image
+                sh """
+                    docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image ${env.DOCKERHUB_USERNAME}/${env.IMAGE_NAME}:${env.IMAGE_TAG} > trivyimage.txt
+                """
+            }
+        }
+    }
+    
+    post {
+        always {
+            // Clean up workspace
+            cleanWs()
+        }
+    }
+}

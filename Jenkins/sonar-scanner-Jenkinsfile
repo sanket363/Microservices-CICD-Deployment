@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+    tools {
+        jdk 'jdk17'
+        nodejs 'node16'
+    }
+    environment {
+        SONAR_HOME = tool 'sonar-scanner'
+    }
+    
+    stages {
+        stage('clean workspace') {
+            steps {
+                cleanWs()
+            }
+        }
+        stage('Checkout from Git') {
+            steps {
+                sh "git clone https://github.com/sanket363/LastYear-Project-DevOps.git"
+            }
+        }
+        
+        stage("Sonarqube Analysis") {
+            steps {
+                withSonarQubeEnv('sonar-server') {
+                    sh "$SONAR_HOME/bin/sonar-scanner -Dsonar.projectName=LastYear -Dsonar.projectKey=LastYear -Dsonar.exclusions=**/*.java"
+                }
+            }
+        }
+        
+        stage('Quality Gate') {
+            steps {
+                script {
+                    def qg = waitForQualityGate(abortPipeline: true)
+                    if (qg.status != 'OK') {
+                        error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                    }
+                }
+            }
+        }
+    }
+}
+
